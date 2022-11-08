@@ -35,48 +35,54 @@ class CLIENT {
 public:
   int idd;
   int maSoThe;
-  char hoTen[256];
-  char diaChi[256];
-  char soDienThoai[256];
-  char cccd[256];
-  double soDuTaiKhoan;
-  char taiKhoan[256];
-  char matKhau[256];
-  char email[256];
-  char ngaySinh[256];
+  string hoTen;
+  string diaChi;
+  string soDienThoai;
+  string cccd;
+  long long soDuTaiKhoan;
+  string taiKhoan;
+  string matKhau;
+  string email;
+  string ngaySinh;
 public:
   friend istream &operator>>(istream &is, CLIENT &p) {
     fflush(stdin);
     
     cout << "Nhap ten: ";
-    cin.getline(p.hoTen, 256);
-    
+    getline(cin,p.hoTen);
+    fflush(stdin);
     cout << "Nhap dia chi email: ";
-    cin.getline(p.email, 256);
-    
+    getline(cin, p.email);
+    fflush(stdin);
     cout << "Nhap so dien thoai: ";
-    cin.getline(p.soDienThoai, 256);
+    getline(cin,p.soDienThoai);
+    fflush(stdin);
     
     cout << "Nhap can cuoc cong dan: ";
-    cin.getline(p.cccd, 256);
+    getline(cin,p.cccd);
+    fflush(stdin);
     
     cout << "Nhap dia chi: ";
-    cin.getline(p.diaChi, 256);
+    getline(cin,p.diaChi);
+    fflush(stdin);
     
     cout << "Nhap ngay sinh (dd-mm-yy): ";
-    cin.getline(p.ngaySinh, 256);
+    getline(cin,p.ngaySinh);
+    fflush(stdin);
     
   	cout << "Nhap ten dang nhap: ";
-  	cin.getline(p.taiKhoan, 256);
+  	getline(cin,p.taiKhoan);
+    fflush(stdin);
   	
   	cout << "Nhap mat khau: ";
-  	cin.getline(p.matKhau, 256);
+  	getline(cin,p.matKhau);
   	
   	do {
         cout << "Xac nhan mat khau: ";
-        char temp[256];
-        cin.getline(temp, 256);
-        if (strcmp(temp, p.matKhau) == 0) {
+        string temp;
+    fflush(stdin);
+        getline(cin, temp);
+        if (temp==p.matKhau) {
             break;
         } else {
             cout << "\n\n!!!Mat khau xac nhan khong chinh xac!!!" << endl;
@@ -138,14 +144,14 @@ void xuatSodu(CLIENT& a){
 void chuyenkhoan(CLIENT& a){
   char bank[256];
   int stk;
-  double tien;
+  long long tien;
   cout<<"Chon ngan hang ban muon chuyen toi: "; 
   fflush(stdin);
   cin.getline(bank,256);
   cout<<"Nhap so tai khoan ma ban muon chuyen toi: "; 
   cin >> stk;
   
-  int x;
+  int x=0;
   for(int i = 1; i<=number; i++) {
   	if (stk == client[i].maSoThe) {
 		x = i;
@@ -171,7 +177,7 @@ void chuyenkhoan(CLIENT& a){
 }
 
 void napTien(CLIENT& a){
-  double tien;
+  long long tien;
   cout<<"Nhap so tien muon nap: "; cin>>tien;
   if (confirmMessage() ) {
   	a.soDuTaiKhoan+=tien;
@@ -185,7 +191,7 @@ void napTien(CLIENT& a){
 }
 
 void rutTien(CLIENT& a){
-  double tien;
+  long long tien;
   do
   {
     cout<<"Nhap so tien muon rut: "; cin >>tien;
@@ -210,20 +216,19 @@ void dichvuKhac(CLIENT& a){
   cout<<"Comming soon!";
 }
 
-int check(char* tendn, char* mk){
+int check(string tendn, string mk){
   for (int i = 1; i <= number; i++)
   {
-    if(strcmp(client[i].taiKhoan,tendn)==0 && strcmp(client[i].matKhau, mk)==0)	return i;
+    if(client[i].taiKhoan==tendn && client[i].matKhau==mk)	return i;
   }
   return 0;
 }
 
 int log_in(){
-  char tendn[256];
-  char mk[256];
+  string tendn;
+  string mk;
   fflush(stdin);
-  cout<<"\nTen Dang Nhap: "; cin.getline(tendn,256);
-  
+  cout<<"\nTen Dang Nhap: "; getline(cin,tendn);
   	int i = 0;
    char ch;
    cout << "Nhap mat khau: ";
