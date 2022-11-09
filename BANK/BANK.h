@@ -9,8 +9,8 @@
 #include <io.h>
 #include <iomanip>
 #include <string.h>
-
-
+#include <cstdlib>
+#include "dateTime.h"
 
 using namespace std;
 
@@ -27,6 +27,7 @@ void showListClient(CLIENT* client);
 bool confirmMessage (); 
 int ConfirmPin(int a);
 void inSodu(long long a);
+int randomNum();
 
 // -----------------  Lich su giao dich  --------------------------------
 
@@ -190,7 +191,8 @@ void chuyenkhoan(CLIENT& a){
   	saveListClient(client);
   	client = getListClient();
   	char x[300];
-	  sprintf(x,"TK: %d  Giao Dich: - %d ", a.maSoThe,tien); 
+    dateTime d;
+    sprintf(x,"TK: %d | GD: -%d %d/%d/%d %d:%d | ND: %s chuyen khoan - Ma GD: %d",a.maSoThe,tien,d.getDay(),d.getMon(),d.getYear(),d.getHour(),d.getMin(),a.hoTen,randomNum());
 	  cout << x;
     }
   } 
@@ -264,11 +266,6 @@ void rutTien(CLIENT& a){
   	cout << "\n  ";
   	saveListClient(client);
   	client = getListClient();
-  	
-  	
-  	
-  	
-  	
   } else {
   	return;
   }
@@ -457,6 +454,11 @@ int ConfirmPin(int a){
     cin >>pin;
     if(a==pin) return 1;
     else return 0;
+}
+int randomNum(){
+  srand(time(NULL));
+	int res = rand()*10000;
+  return res;
 }
 
 // ------------------------------------------------------------------------------------
