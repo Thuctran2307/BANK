@@ -93,19 +93,19 @@ void xuatSodu(CLIENT& a){
   cout << "+-----------------------------------------------------------------+" << endl;
   cout << "| SO TAI KHOAN   | TEN TAI KHOAN              | SO DU HIEN TAI    |" << endl;
   cout << "|-----------------------------------------------------------------|" << endl;
-  cout << "| " << setw(14) << left <<a.maSoThe << " | " << setw(26) << left << a.hoTen <<" | " << setw(17) << left << a.soDuTaiKhoan << " |" << endl;	
+  cout << "| " << setw(14) << left <<a.maSoThe << " | " << setw(26) << left << a.hoTen <<" | "; inSodu(a.soDuTaiKhoan); 
   cout << "+-----------------------------------------------------------------+" << endl;
-  
-  
 }
 
 void chuyenkhoan(CLIENT& a){
+  xuatSodu(a);
   char bank[256],nd[256];
   int stk=0,s;
   long long tien;
   cout << "  Vui long chon hinh thuc chuyen tien:"<<endl;
   cout << "  [1].Chuyen noi bo."<<endl;
   cout << "  [2].Chuyen lien ngan hang."<<endl;
+  cout << "  [0].Thoat giao dich."<<endl;
   cout << "  Nhap lua chon: ";
   cin >> s;
   switch (s)
@@ -122,6 +122,7 @@ void chuyenkhoan(CLIENT& a){
       for (i = 1; i<= number; i++)
         if (stk == client[i].maSoThe){
           kh = i;
+          cout<<"  Ten nguoi thu huong: "<<client[i].hoTen<<endl;
           do
         {
           cout<<"  Nhap so tien muon chuyen: "; cin >>tien;
@@ -134,8 +135,8 @@ void chuyenkhoan(CLIENT& a){
         cout<<"  Nhap noi dung chuyen khoan: "; cin.getline(nd,256);
         if(ConfirmPin(a.PIN)==1){
         if (confirmMessage()) {
-        if(a.soDuTaiKhoan<=50000){
-          cout<<"  So du quy khach nho hon 50K, vui long nap them tien vao tai khoan de thuc hien giao dich!"<<endl;
+        if(a.soDuTaiKhoan-tien<=50000){
+          cout<<"  Yeu cau so du duy tri tai khoan toi thieu 50.000 VND, quy khach vui long nap them tien vao tai khoan de thuc hien giao dich!"<<endl;
         }
         else{
         long long cu= a.soDuTaiKhoan;
@@ -154,6 +155,8 @@ void chuyenkhoan(CLIENT& a){
         saveTransaction(y,path2);
         saveListClient(client);
         client = getListClient();
+        cout<<"------------------------------------\nThong bao bien dong so du: ";
+        cout<<x;
         }
         }
       }
@@ -169,7 +172,6 @@ void chuyenkhoan(CLIENT& a){
 break;
   
   case 2:
-
     fflush(stdin);
     cout<<"  Nhap ngan hang ban muon chuyen toi:"; 
     cin.getline(bank,256);
@@ -201,16 +203,19 @@ break;
       saveTransaction(x,path);
       saveListClient(client);
       client = getListClient();
+      cout<<"------------------------------------\nThong bao bien dong so du: ";
+        cout<<x;
       }
     } 
     }
-    
     break;
+    case 0: return;
   }
   
 }
 
 void napTien(CLIENT& a){
+  xuatSodu( a);
   long long tien;
   cout<<"  Nhap so tien muon nap: "; cin>>tien;
   if (confirmMessage() ) {
@@ -225,6 +230,8 @@ void napTien(CLIENT& a){
     saveTransaction(x,path);
   	saveListClient(client);
   	client = getListClient();
+    cout<<"------------------------------------\nThong bao bien dong so du: ";
+    cout<<x;
   }	else {
   	return;
   }
@@ -232,13 +239,15 @@ void napTien(CLIENT& a){
 }
 
 void rutTien(CLIENT& a){
+  xuatSodu( a);
   long long tien;
   do
   {
   	xuatSodu(a);
-  	
     cout<<"  Nhap so tien muon rut: "; cin >>tien;
-    if(tien>a.soDuTaiKhoan) cout<<"  So du khong du de rut, vui long nhap so du nho hon "; inSodu(a.soDuTaiKhoan);
+    if(tien>a.soDuTaiKhoan){
+       cout<<"  So du khong du de rut, vui long nhap so du nho hon "; inSodu(a.soDuTaiKhoan);
+    }
   } while (tien>a.soDuTaiKhoan);
   if(ConfirmPin(a.PIN)==1){
   if (confirmMessage() ) {
@@ -247,12 +256,14 @@ void rutTien(CLIENT& a){
   	cout << "\n  ";
     char x[256];
     dateTime d;
-    sprintf(x," TK: %d \n GD: -%d %d/%d/%d %d:%d \n Hinh thuc: Rut Tien \n ND: Rut tien tu tai khoan %d \n Ma GD: %d\n_",a.maSoThe,tien,d.getDay(),d.getMon(),d.getYear(),d.getHour(),d.getMin(),a.idd,randomNum());
+    sprintf(x," TK: %d \n GD: -%d %d/%d/%d %d:%d \n Hinh thuc: Rut Tien \n ND: Rut tien tu tai khoan %d \n Ma GD: %d\n_",a.maSoThe,tien,d.getDay(),d.getMon(),d.getYear(),d.getHour(),d.getMin(),a.maSoThe,randomNum());
     char path[256];
     sprintf(path,"./LSGD/%d-%s.txt",a.idd,a.hoTen);
     saveTransaction(x,path);
   	saveListClient(client);
   	client = getListClient();
+    cout<<"------------------------------------\nThong bao bien dong so du: ";
+        cout<<x;
   } else {
   	return;
   }
@@ -260,23 +271,34 @@ void rutTien(CLIENT& a){
 }
 
 void doiMapin(CLIENT& a){
-  char mk[258];
+  char mk[256];
   int pin;
   do
   {
     cout<<"  Vui long nhap mat khau: ";
-    cin.getline(mk,258);
+    fflush(stdin);
+    cin.getline(mk,256);
     if(strcmp(mk, a.matKhau) == 0) break;
+    else{
+      cout<<"Mat khau khong chinh xac! Vui long nhap lai! "<<endl;
+    }
   } while (1);
+
   do
   {
     cout<<"  Vui long nhap ma pin cu: ";
     cin >>pin;
     if(pin==a.PIN) break;
+    else{
+      cout<<"Ma pin khong chinh xac! Vui long nhap lai!"<<endl;
+    }
   } while (1);
   cout<<"  Nhap ma pin moi: ";
-  cin>>a.PIN;
-  if(confirmMessage()) cout<<"  Thay doi ma pin thanh cong!"<<endl;
+  cin>>pin;
+  if(confirmMessage()){ 
+    cout<<"  Thay doi ma pin thanh cong!"<<endl;
+    a.PIN=pin;
+  }
   else cout<<"  Thay doi ma pin khong thanh cong!"<<endl;
 }
 
@@ -398,7 +420,6 @@ void inSodu(long long a ){
      cout<<arr[d-i+1];
      if(i%3==0 && i<d) cout<<".";
    }
-   cout<<endl;
   }
   else{
     for (int i = d; i > d-d%3; i--){
@@ -411,6 +432,7 @@ void inSodu(long long a ){
      cout<<arr[t-i+1];
      if(i%3==0 && i< t) cout<<".";
    }
+   cout<<" VND";
    cout<<endl;
   }
 }
@@ -461,8 +483,8 @@ void exportTransaction (CLIENT& a) {
 	fstream f;
 	char path[256];
 	sprintf(path,"./LSGD/%d-%s.txt",a.idd,a.hoTen);
-	
 	f.open(path, ios::in);
+  if(!(f.peek()==std::ifstream::traits_type::eof())){
 	string temp;
 	system ("cls");
 	cout << "\n\t\t LICH SU GIAO DICH" << endl;
@@ -473,7 +495,12 @@ void exportTransaction (CLIENT& a) {
 		cout << temp << endl;
 		
 	}
+  }
+  else{
+    cout<<"Chua co lich su giao dich!"<<endl;
+  }
 	f.close();
+
 }
 
 
@@ -498,7 +525,7 @@ void signUp (CLIENT& p) {
     cout << "  Nhap ngay sinh (dd-mm-yy): ";
     cin.getline(p.ngaySinh, 256);
     cout << "\n";
-    int temp;
+    int temp=0;
   	do {
   		
   		cout << "  Nhap ten dang nhap: ";
@@ -509,7 +536,6 @@ void signUp (CLIENT& p) {
   				temp = 1;
   				cout << "\n  Ten dang nhap da ton tai. Vui long su dung ten dang nhap khac \n" << endl;
 			}
-			
 		}
 	} while (temp);
 	cout << "\n";
@@ -530,6 +556,7 @@ void signUp (CLIENT& p) {
   		cout << "\n";
         cout << "  Xac nhan mat khau: ";
         char temp[256];
+        fflush(stdin);
         cin.getline(temp, 256);
         if (strcmp(temp, p.matKhau) == 0) {
             break;
@@ -566,7 +593,7 @@ void quenMatKhau () {
 	cin.getline(_tenDangNhap, 256);
 	int check = 0;
 	int i;
-	for (i=0; i<number; i++) {
+	for (i=1; i<=number; i++) {
 		if (strcmp (_tenDangNhap, client[i].taiKhoan) == 0) {
 			check = 1;
 			break;
@@ -575,7 +602,7 @@ void quenMatKhau () {
 	
 	if (check) {
 		cout << "  Quy khach vui long xac nhan mot so thong tin can thiet" << endl;
-		cout << "  Nhap so dien thoai dang nhap: ";
+		cout << "  Nhap so dien thoai dang ky: ";
 		char _sdt[256];
 		cin.getline(_sdt, 256);
 		cout << "  Nhap ho ten: ";
@@ -604,6 +631,7 @@ void quenMatKhau () {
 		
 	} else {
 		cout << "  Tai khoan vua nhap khong ton tai" << endl;
+    system("pause");
 	}
 }
 
