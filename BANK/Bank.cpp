@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -18,17 +19,17 @@ void menu_main(){
     do
     {
     	system("cls");
-    	cout <<"********************************************************************" << endl;
-    	cout <<"**                                                                **" << endl;
-    	cout <<"**           Welcome to T.V Bank- Bank of VietNam                 **" << endl;
-    	cout <<"**                                                                **" << endl;
-    	cout <<"********************************************************************" << endl;
+    	cout <<"******************************************************************" << endl;
+    	cout <<"*                                                                *" << endl;
+    	cout <<"*           Welcome to T.V Bank- Bank of VietNam                 *" << endl;
+    	cout <<"*                                                                *" << endl;
+    	cout <<"******************************************************************" << endl;
     	cout << "\n";
-        cout<<"  [1].Dang Nhap"<<endl;
-        cout<<"  [2].Dang ki tai khoan"<<endl;
-        cout<<"  [3].Quen mat khau" << endl; 
-        cout<<"  [0].Thoat ngan hang"<<endl;
-        cout<<"\n  Nhap lua chon: "; cin>>s;
+        cout<<"  1.Dang Nhap"<<endl;
+        cout<<"  2.Dang ki tai khoan"<<endl;
+        cout<<"  3.Lien he dich vu CSKH"<<endl;
+        cout<<"  0.Thoat ngan hang"<<endl;
+        cout<<"\n  Nhap lua chon cua ban: "; cin>>s;
         
         switch (s)
         {
@@ -43,19 +44,19 @@ void menu_main(){
         		{
         	system("cls");
         	
-        	cout <<"********************************************************************" << endl;
-    		cout <<"**                                                                **" << endl;
-        	cout <<"**                   Welcome" << " " << setw(35) << left << client[vt].hoTen << "  **" << endl;
-    		cout <<"**                                                                **" << endl;
-    		cout <<"********************************************************************" << endl;
-            cout<<"\n  [1].Thong tin tai khoan."<<endl;;
-            cout<<"  [2].So du tai khoan."<<endl;
-            cout<<"  [3].Chuyen khoan"<<endl;
-            cout<<"  [4].Nap tien."<<endl;
-            cout<<"  [5].Rut tien."<<endl;
-            cout<<"  [6].Doi ma pin"<<endl;
-            cout<<"  [7].Lich su giao dich."<<endl; 
-            cout<<"  [0].Dang Xuat" << endl;
+        	cout <<"******************************************************************" << endl;
+    		cout <<"*                                                                *" << endl;
+        	cout <<"*                   Welcome" << " " << setw(35) << left << client[vt].hoTen << "  *" << endl;
+    		cout <<"*                                                                *" << endl;
+    		cout <<"******************************************************************" << endl;
+            cout<<"\n  1.Thong tin tai khoan."<<endl;;
+            cout<<"  2.So du tai khoan."<<endl;
+            cout<<"  3.Chuyen khoan"<<endl;
+            cout<<"  4.Nap tien."<<endl;
+            cout<<"  5.Rut tien."<<endl;
+            cout<<"  6.Doi ma pin."<<endl;
+            cout<<"  7.Lich su giao dich."<<endl;
+            cout<<"  0.Dang Xuat" << endl;
             cout << "\n  Nhap lua chon: ";
 			cin >> s; 
             switch (s)
@@ -86,19 +87,21 @@ void menu_main(){
 				system("pause");
                 break;
                 case 6: doiMapin(client[vt]);
-                system("pause");
                 break;
                 case 7: 
 					exportTransaction(client[vt]);
-					system("pause");
+                    system("pause");
                 	break;
                 	
                 default: s = 0;
           }
         } while(s);
 			} else {
-				cout<<"\n\n  Tai khoan va mat khau chua chinh xac! Vui long nhap lai!"<<endl;
-				system("pause");
+                int sl=0;
+				cout<<"\n\nTai khoan va mat khau chua chinh xac! Vui long nhap lai!"<<endl;
+				cout<<"1.Quen mat khau."<<endl<<"2.Dang nhap lai."<<endl;
+                cout<<"Nhap lua chon cua ban: "; cin>>sl;
+                if(sl==1) quenMatKhau();
 			}
             
             break;
@@ -107,33 +110,15 @@ void menu_main(){
             moTaiKhoan();
             break;
         case 3:
-//        	system("cls");
-            quenMatKhau();
-            system ("pause");
+            // CSKH
             break;
-        
-        	
-    }	
+    }
     } while (s);
 } 
 
 int main() {
 	layID();
-	
 	client = getListClient();
-	
-
-
-
-	
-	 menu_main();
-
-	
-
-	
- 	 
-
-	
+	menu_main();
 	taoID();
 }
-
