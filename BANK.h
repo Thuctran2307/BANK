@@ -25,7 +25,7 @@ CLIENT* getListClient();//Lay du lieu trong file va tra ve mang du lieu
 void saveListClient(CLIENT* client);//luu du lieu vao file
 void showListClient(CLIENT* client);
 bool confirmMessage (); 
-int ConfirmPin(int a);
+int ConfirmPin(char a[]);
 void inSodu(long long a);
 int randomNum();
 void signUp (CLIENT& p);
@@ -52,7 +52,7 @@ public:
   char matKhau[256];
   char email[256];
   char ngaySinh[256];
-  int PIN;
+  char PIN[256];
 public:
 };
 
@@ -112,6 +112,7 @@ void chuyenkhoan(CLIENT& a){
   {
   case 1:
   {
+    system("cls");
     int kh=0;
     do
     {
@@ -134,6 +135,7 @@ void chuyenkhoan(CLIENT& a){
 
 		    fflush (stdin);
         cout<<"  Nhap noi dung chuyen khoan: "; cin.getline(nd,256);
+        if(strcmp(nd,"")==0)sprintf(nd," %s chuyen tien",a.hoTen );
         int q=3;
         do{
           int check=ConfirmPin(a.PIN);
@@ -191,9 +193,31 @@ void chuyenkhoan(CLIENT& a){
 break;
   
   case 2:
+  {
     fflush(stdin);
-    cout<<"  Nhap ngan hang ban muon chuyen toi:"; 
-    cin.getline(bank,256);
+     system("cls");
+    cout<<"Chon ngan hang ban muon chuyen den:"<<endl;
+    int choose=0;
+    struct bank
+    {
+      char name[256];
+    };
+    bank listbank[8]={"","Agribank","Mb Bank","Tien Phong","VP Bank","ACB","Nam A Bank","Sacombank"};
+      cout<<"1. Ngan hang AgriBank"<<endl;
+      cout<<"2. Ngan hang Mb bank"<<endl;
+      cout<<"3. Ngan hang Tien Phong"<<endl;
+      cout<<"4. Ngan hang VP Bank"<<endl;
+      cout<<"5. Ngan hang ACB"<<endl;
+      cout<<"6. Ngan hang Nam A Bank"<<endl;
+      cout<<"7. Ngan hang SacomBank"<<endl;
+      cout<<"0. Khong co ngan hang ban ban tim"<<endl;
+      cout<<"Nhap lua chon cua ban: ";
+      cin>>choose;
+    
+    if(choose==0){
+      cout<<"Nhap ngan hang chuyen den: "<<endl;
+      cin.getline(listbank[0].name,256);
+    } 
     fflush(stdin);
     cout<<"  Nhap so tai khoan ma ban muon chuyen toi: "; 
     cin >> stk;
@@ -204,30 +228,43 @@ break;
     } while (tien>a.soDuTaiKhoan);
     fflush(stdin);
     cout<<"  Nhap noi dung chuyen khoan: "; cin.getline(nd,256);
-    
-    if(ConfirmPin(a.PIN)==1){
+    if(strcmp(nd,"")==0)sprintf(nd," %s chuyen tien",a.hoTen );
+    int q=3;
+        do{
+          int check=ConfirmPin(a.PIN);
+          if(!check){
+            q--;
+            cout<<"  Ma pin sai! Vui long nhap lai! Con "<<q<<" lan nhap!"<<endl;
+            if(q==0){
+              cout<<"Da nhap sai qua 3 lan! Vui long thuc hien lai giao dich moi!"<<endl;
+               return;
+            }
+          }
+          else break;
+         }while(1);
     if (confirmMessage()) {
       if(a.soDuTaiKhoan<=50000){
         cout<<"  So du quy khach nho hon 50K, vui long nap them tien vao tai khoan de thuc hien giao dich!"<<endl;
       }
       else{
       a.soDuTaiKhoan=a.soDuTaiKhoan-tien-0.02*tien;
+      system("cls");
       cout<<"  Giao dich thanh cong! So du hien tai cua quy khach la: "; inSodu(a.soDuTaiKhoan);
-      cout<<" (Da tru 2% phi giao dich)";
+      cout<<" (Da tru 2% phi giao dich)"<<endl;
       char x[256];
       dateTime d;
-      sprintf(x," TK: %d \n GD: -%d %d/%d/%d %d:%d \n Hinh thuc: Chuyen Khoan \n ND: %s \n Ma GD: %d\n_",a.maSoThe,tien,d.getDay(),d.getMon(),d.getYear(),d.getHour(),d.getMin(),nd,randomNum());
+      sprintf(x," TK: %d \n GD: -%d %d/%d/%d %d:%d \n Hinh thuc: Chuyen khoan den STK: %d thuoc ngan hang %s \n ND: %s \n Ma GD: %d\n_",a.maSoThe,tien,d.getDay(),d.getMon(),d.getYear(),d.getHour(),d.getMin(),stk,listbank[choose].name,nd,randomNum());
       char path[256];
       sprintf(path,"./LSGD/%d-%s.txt",a.idd,a.hoTen);
       saveTransaction(x,path);
       saveListClient(client);
       client = getListClient();
-      cout<<"------------------------------------\nThong bao bien dong so du: ";
-        cout<<x;
+      cout<<"------------------------------------\nThong bao bien dong so du: "<<endl;
+      cout<<x;
       }
     } 
-    }
     break;
+  }
     case 0: return;
   }
   
@@ -299,7 +336,7 @@ NhapPin:
 
 void doiMapin(CLIENT& a){
   char mk[256];
-  int pin;
+  char pin[256];
   do
   {
     cout<<"  Vui long nhap mat khau: ";
@@ -314,18 +351,17 @@ void doiMapin(CLIENT& a){
   do
   {
     cout<<"  Vui long nhap ma pin cu: ";
-    cin >>pin;
-    if(pin==a.PIN) break;
+    cin.getline(pin,256);
+    if(strcmp(pin,a.PIN)==0) break;
     else{
       cout<<"Ma pin khong chinh xac! Vui long nhap lai!"<<endl;
     }
   } while (1);
   cout<<"  Nhap ma pin moi: ";
-  cin>>pin;
+  cin.getline(a.PIN,256);
   if(confirmMessage()){ 
     cout<<"  Thay doi ma pin thanh cong!"<<endl;
     system("pause");
-    a.PIN=pin;
     saveListClient(client);
     client = getListClient();
   }
@@ -491,11 +527,11 @@ bool confirmMessage () {
 	if (select == 1)	return 1;
 	else 				return 0;
 }
-int ConfirmPin(int a){
-    int pin;
+int ConfirmPin(char a[]){
+    char pin[256];
     cout<<"  Vui long nhap ma pin de xac nhan giao dich: ";
-    cin >>pin;
-    if(a==pin) return 1;
+    cin.getline(pin,256);
+    if(strcmp(pin,a)) return 1;
     else return 0;
 }
 int randomNum(){
@@ -602,13 +638,13 @@ void signUp (CLIENT& p) {
     } while(1);
     
     cout << "\n";
-    cout<<"  Nhap ma pin moi: "; cin>>p.PIN;
+    cout<<"  Nhap ma pin moi: "; cin.getline(p.PIN,256);
     do {
     	cout << "\n";
         cout << "  Xac nhan ma pin: ";
-        int t;
+        char t[256];
         cin>>t;
-        if (t==p.PIN) {
+        if (strcmp(t,p.PIN)==0) {
             cout<<"  Tai khoan quy khach da duoc tao thanh cong! Vui long dang nhap de su dung dich vu!"<<endl;
             system("pause");
             break;
