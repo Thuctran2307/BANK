@@ -531,7 +531,7 @@ int ConfirmPin(char a[]){
     char pin[256];
     cout<<"  Vui long nhap ma pin de xac nhan giao dich: ";
     cin.getline(pin,256);
-    if(strcmp(pin,a)) return 1;
+    if(strcmp(pin,a)==0) return 1;
     else return 0;
 }
 int randomNum(){
@@ -646,6 +646,7 @@ void signUp (CLIENT& p) {
         cin>>t;
         if (strcmp(t,p.PIN)==0) {
             cout<<"  Tai khoan quy khach da duoc tao thanh cong! Vui long dang nhap de su dung dich vu!"<<endl;
+            cout<<p.PIN;
             system("pause");
             break;
         } else {
